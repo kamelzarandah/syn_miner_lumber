@@ -11,9 +11,9 @@ Config.miningswings = { -- number of swings per node randomized between min and 
 }
 
 Config.items = { -- different item types 
-    pickaxe = {draindura = 1, difficultymin = 4000, difficultymax = 2700, type = "mining"},
-    hatchet = {draindura = 1, difficultymin = 4000, difficultymax = 2700, type = "lumber"},
-    lumberaxe = {draindura = 1, difficultymin = 4000, difficultymax = 2700, type = "lumber"}
+    pickaxe = {draindura = 1,dura = 200, difficultymin = 4000, difficultymax = 2700, type = "mining"},
+    hatchet = {draindura = 1,dura = 200, difficultymin = 4000, difficultymax = 2700, type = "lumber"},
+    lumberaxe = {draindura = 1,dura = 300, difficultymin = 4000, difficultymax = 2700, type = "lumber"}
 }
 
 Config.jobs = {

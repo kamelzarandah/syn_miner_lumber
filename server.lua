@@ -19,7 +19,7 @@ function useditem(source,item,iteminfo,info)
         durability = meta.durability 
     end
     if durability == nil then 
-        durability = 100
+        durability = Config.items[item].dura
     end
     TriggerClientEvent("syn_miner_lumber:itemused", _source, item, iteminfo, durability,info)
 end
