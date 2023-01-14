@@ -76,7 +76,7 @@ AddEventHandler('syn_miner_lumber:updateitem', function(item,newdura,itemdata)
                 meta.description = newstring
                 meta.durability = newdura
             else
-                meta.description = meta.description.."\n"..language.durability..newdura
+                meta.description = meta.description.." <br> "..language.durability..newdura
                 meta.durability = newdura
             end
         else
