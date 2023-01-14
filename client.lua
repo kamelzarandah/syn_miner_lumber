@@ -209,7 +209,11 @@ Citizen.CreateThread(function()
                 local randomizer =  math.random(iteminfo.difficultymax,iteminfo.difficultymin)
                 swings = swings + 1
                 ClearPedTasks(PlayerPedId())
-                Anim(PlayerPedId(),'amb_work@world_human_pickaxe_new@working@male_a@trans','pre_swing_trans_after_swing',-1,0)
+                if thetype == "mining" then 
+                    Anim(PlayerPedId(),'amb_work@world_human_pickaxe_new@working@male_a@trans','pre_swing_trans_after_swing',-1,0)
+                else 
+                    Anim(PlayerPedId(),"amb_work@world_human_tree_chop_new@working@pre_swing@male_a@trans","pre_swing_trans_after_swing",-1,0)
+                end
                 local testplayer = exports["syn_minigame"]:taskBar(randomizer,7)
                 if testplayer == 100 then 
                     TriggerServerEvent('syn_miner_lumber:addItem',thetype)
