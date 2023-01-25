@@ -220,6 +220,7 @@ Citizen.CreateThread(function()
                 end
                 newdura = newdura - iteminfo.draindura
                 if 0 >= newdura then 
+                    Citizen.InvokeNative(0x58F7DB5BD8FA2288, PlayerPedId())
                     TriggerServerEvent('syn_miner_lumber:removeitem',itemused,itemmetadata)
                     DeleteEntity(itemobject)
                     itemobject = nil

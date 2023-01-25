@@ -43,16 +43,12 @@ AddEventHandler('syn_miner_lumber:addItem', function(thetype)
 	if containsjob(job,Config.jobs[thetype]) then 
 		count = count + Config.rewardincrease 
 	end
-	TriggerEvent("vorpCore:canCarryItems", tonumber(_source), count, function(canCarry)
-		TriggerEvent("vorpCore:canCarryItem", tonumber(_source), reward[chance2].name,count, function(canCarry2)
-			if canCarry and canCarry2 then
-				VorpInv.addItem(_source, reward[chance2].name, count)
-				TriggerClientEvent("vorp:TipRight", _source, language.youfound..reward[chance2].label, 3000)
-			else
-				TriggerClientEvent("vorp:TipRight", _source, language.cantcarry..reward[chance2].label, 3000)
-			end
-		end)
-	end) 
+    local adding = VorpInv.addItem(_source, reward[chance2].name, count)
+    if adding then 
+        TriggerClientEvent("vorp:TipRight", _source, language.youfound..reward[chance2].label, 3000)
+    else
+        TriggerClientEvent("vorp:TipRight", _source, language.cantcarry..reward[chance2].label, 3000)
+    end
 end)
 
 RegisterServerEvent('syn_miner_lumber:removeitem')

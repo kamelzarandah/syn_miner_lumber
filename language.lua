@@ -5,7 +5,7 @@ language = {
     stop = "Stop",
     youfound = "You found ",
     cantcarry = "You can't carry anymore ",
-    axebroken = "Your axe is broken",
+    axebroken = "Your tool broke",
     durability = "Durability = ",
     unequip = "You need to unequip your current tool",
 }
