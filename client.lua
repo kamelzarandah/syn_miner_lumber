@@ -13,6 +13,7 @@ local swingkey
 local started = false 
 
 local gathered = {}
+local gatheredcoords = {}
 local swingcount
 local swings = 0 
 
@@ -167,6 +168,7 @@ Citizen.CreateThread(function()
         local sleep = true
         local playerped = PlayerPedId()
         if itemobject ~= nil and not IsPedOnMount(playerped) and not IsPedInAnyVehicle(playerped) and not IsPedDeadOrDying(playerped) then
+            local coords = GetEntityCoords(playerped)
             local x, y, z = table.unpack(GetEntityCoords(PlayerPedId()))
             for k,v in pairs(information.objects[thetype]) do
                 local prop = DoesObjectOfTypeExistAtCoords(x, y, z, 1.0, GetHashKey(v), true)
@@ -187,6 +189,27 @@ Citizen.CreateThread(function()
                         end
                     end
                 end
+            end
+            for k,v in pairs(information.location[thetype]) do 
+                local dist = GetDistanceBetweenCoords(v.x,v.y,v.z, coords.x,coords.y,coords.z, true)
+                if 1.5 >= dist then 
+                    if not InArray(gatheredcoords, k) and not started then
+                        sleep = false 
+                        local label  = CreateVarString(10, 'LITERAL_STRING', language[thetype])
+				        PromptSetActiveGroupThisFrame(prompts, label)
+                        if PromptHasHoldModeCompleted(startkey) then
+                            attachtomine()
+                            table.insert(gatheredcoords, k)
+                            swings = 0
+                            SetCurrentPedWeapon(playerped, GetHashKey("WEAPON_UNARMED"), true, 0, false, false)
+                            swingcount = math.random(Config.miningswings.min, Config.miningswings.max)
+                            FreezeEntityPosition(PlayerPedId(), true)
+                            started = true 
+                            TriggerEvent("syn_miner_lumber:removecoords",k)
+                        end
+                    end
+                end
+
             end
         end
         if sleep then
@@ -248,6 +271,12 @@ RegisterNetEvent("syn_miner_lumber:removeprop")
 AddEventHandler("syn_miner_lumber:removeprop", function(prop)
     Wait(300000)
     table.remove(gathered, GetArrayKey(gathered, tostring(prop)))
+end)
+
+RegisterNetEvent("syn_miner_lumber:removecoords")
+AddEventHandler("syn_miner_lumber:removecoords", function(prop)
+    Wait(300000)
+    table.remove(gatheredcoords, GetArrayKey(gatheredcoords, prop))
 end)
 
 
