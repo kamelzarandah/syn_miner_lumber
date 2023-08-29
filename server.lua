@@ -25,7 +25,13 @@ function useditem(source,item,iteminfo,info)
 end
 
 
+---@param source -- player id
 
+---@param item -- item name
+
+---@param amount-- amount of item
+
+---@param callback-- callback function async or sync leave nil
 
 RegisterServerEvent('syn_miner_lumber:addItem')
 AddEventHandler('syn_miner_lumber:addItem', function(thetype)
