@@ -35,37 +35,41 @@ end
 
 RegisterServerEvent('syn_miner_lumber:addItem')
 AddEventHandler('syn_miner_lumber:addItem', function(thetype)
-	local _source = source
-	local Character = VorpCore.getUser(_source).getUsedCharacter
+    local _source = source
+    local Character = VorpCore.getUser(_source).getUsedCharacter
     local job = Character.job
-	local chance =  math.random(1,10)
-	local reward = {}
-	for k,v in pairs(Config.rewards[thetype]) do 
-		if v.chance >= chance then
-			table.insert(reward,v)
-		end
-	end
-	local chance2 = math.random(1,keysx(reward))
-	local count = math.random(1,reward[chance2].amount)
-	if containsjob(job,Config.jobs[thetype]) then 
-		count = count + Config.rewardincrease 
-
-	end
-    local canCarry2 = exports.vorp_inventory:canCarryItems(_source, count)
-
-    if  canCarry2 == false then do
-        TriggerClientEvent("vorp:TipRight", _source, language.cantcarry, 3000)
+    local chance = math.random(1, 10)
+    local reward = {}
+    for k, v in pairs(Config.rewards[thetype]) do
+        if v.chance >= chance then
+            table.insert(reward, v)
+        end
     end
-    elseif canCarry2 then
-        local adding = VorpInv.addItem(_source, reward[chance2].name, count)
-        if adding then 
+    local amount2 = keysx(reward)
+    if amount2 ~= 0 then
+        local chance2 = math.random(1, amount2)
+        local count = math.random(1, reward[chance2].amount)
+        if containsjob(job, Config.jobs[thetype]) then
+            count = count + Config.rewardincrease
+        end
+        local amount2 = keysx(reward)
+        if amount2 ~= 0 then
+            local canCarry2 = exports.vorp_inventory:canCarryItems(_source, count)
 
-        local canCarry = exports.vorp_inventory:canCarryItem(_source, reward[chance2].name, count)
-            if canCarry then
-
-            TriggerClientEvent("vorp:TipRight", _source, language.youfound..reward[chance2].label, 3000)
-        else
-            TriggerClientEvent("vorp:TipRight", _source, language.cantcarry..reward[chance2].label, 3000)
+            if canCarry2 == false then
+                do
+                    TriggerClientEvent("vorp:TipRight", _source, language.cantcarry, 3000)
+                end
+            elseif canCarry2 then
+                local adding = VorpInv.addItem(_source, reward[chance2].name, count)
+                if adding then
+                    local canCarry = exports.vorp_inventory:canCarryItem(_source, reward[chance2].name, count)
+                    if canCarry then
+                        TriggerClientEvent("vorp:TipRight", _source, language.youfound .. reward[chance2].label, 3000)
+                    else
+                        TriggerClientEvent("vorp:TipRight", _source, language.cantcarry .. reward[chance2].label, 3000)
+                    end
+                end
             end
         end
     end
