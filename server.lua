@@ -47,33 +47,31 @@ AddEventHandler('syn_miner_lumber:addItem', function(thetype)
     end
     local amount2 = keysx(reward)
     if amount2 ~= 0 then
-        local chance2 = math.random(1, amount2)
+        local chance2 = math.random(1, keysx(reward))
         local count = math.random(1, reward[chance2].amount)
         if containsjob(job, Config.jobs[thetype]) then
             count = count + Config.rewardincrease
         end
-        local amount2 = keysx(reward)
-        if amount2 ~= 0 then
-            local canCarry2 = exports.vorp_inventory:canCarryItems(_source, count)
+        local canCarry2 = exports.vorp_inventory:canCarryItems(_source, count)
 
-            if canCarry2 == false then
-                do
-                    TriggerClientEvent("vorp:TipRight", _source, language.cantcarry, 3000)
-                end
-            elseif canCarry2 then
-                local adding = VorpInv.addItem(_source, reward[chance2].name, count)
-                if adding then
-                    local canCarry = exports.vorp_inventory:canCarryItem(_source, reward[chance2].name, count)
-                    if canCarry then
-                        TriggerClientEvent("vorp:TipRight", _source, language.youfound .. reward[chance2].label, 3000)
-                    else
-                        TriggerClientEvent("vorp:TipRight", _source, language.cantcarry .. reward[chance2].label, 3000)
-                    end
+        if canCarry2 == false then
+            do
+                TriggerClientEvent("vorp:TipRight", _source, language.cantcarry, 3000)
+            end
+        elseif canCarry2 then
+            local adding = VorpInv.addItem(_source, reward[chance2].name, count)
+            if adding then
+                local canCarry = exports.vorp_inventory:canCarryItem(_source, reward[chance2].name, count)
+                if canCarry then
+                    TriggerClientEvent("vorp:TipRight", _source, language.youfound .. reward[chance2].label, 3000)
+                else
+                    TriggerClientEvent("vorp:TipRight", _source, language.cantcarry .. reward[chance2].label, 3000)
                 end
             end
         end
     end
 end)
+
 
 RegisterServerEvent('syn_miner_lumber:removeitem')
 AddEventHandler('syn_miner_lumber:removeitem', function(item,itemdata)
