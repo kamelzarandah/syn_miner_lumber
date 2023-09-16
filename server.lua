@@ -32,10 +32,14 @@ end
 ---@param amount-- amount of item
 
 ---@param callback-- callback function async or sync leave nil
-
 RegisterServerEvent('syn_miner_lumber:addItem')
-AddEventHandler('syn_miner_lumber:addItem', function(thetype)
+AddEventHandler('syn_miner_lumber:addItem', function(thetype, itemused)
     local _source = source
+    local itemcount = VorpInv.getItemCount(_source, itemused)
+    if itemcount <= 0 then
+        TriggerClientEvent("vorp:TipRight", _source, "You must have a " .. itemused .. " in your pocket to do this.",3000)
+        return
+    end
     local Character = VorpCore.getUser(_source).getUsedCharacter
     local job = Character.job
     local chance = math.random(1, 10)
