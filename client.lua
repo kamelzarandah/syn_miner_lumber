@@ -239,7 +239,7 @@ Citizen.CreateThread(function()
                 end
                 local testplayer = exports["syn_minigame"]:taskBar(randomizer,7)
                 if testplayer == 100 then 
-                    TriggerServerEvent('syn_miner_lumber:addItem',thetype)
+                    TriggerServerEvent('syn_miner_lumber:addItem',thetype,itemused)
                 end
                 newdura = newdura - iteminfo.draindura
                 if 0 >= newdura then 
