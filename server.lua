@@ -37,7 +37,7 @@ AddEventHandler('syn_miner_lumber:addItem', function(thetype, itemused)
     local _source = source
     local itemcount = VorpInv.getItemCount(_source, itemused)
     if itemcount <= 0 then
-        TriggerClientEvent("vorp:TipRight", _source, "You must have a " .. itemused .. " in your pocket to do this.",3000)
+        VorpCore.NotifyRightTip(_source, language.noaxe .. itemused .. language.noaxe2,3000)
         return
     end
     local Character = VorpCore.getUser(_source).getUsedCharacter
