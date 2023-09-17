@@ -32,12 +32,13 @@ end
 ---@param amount-- amount of item
 
 ---@param callback-- callback function async or sync leave nil
+
 RegisterServerEvent('syn_miner_lumber:addItem')
 AddEventHandler('syn_miner_lumber:addItem', function(thetype, itemused)
     local _source = source
     local itemcount = VorpInv.getItemCount(_source, itemused)
     if itemcount <= 0 then
-        VorpCore.NotifyRightTip(_source, language.noaxe .. itemused .. language.noaxe2,3000)
+        VorpCore.NotifyRightTip(_source, language.noaxe .. itemused .. language.noaxe2, 3000)
         return
     end
     local Character = VorpCore.getUser(_source).getUsedCharacter
@@ -59,23 +60,19 @@ AddEventHandler('syn_miner_lumber:addItem', function(thetype, itemused)
         local canCarry2 = exports.vorp_inventory:canCarryItems(_source, count)
 
         if canCarry2 == false then
-            do
-                TriggerClientEvent("vorp:TipRight", _source, language.cantcarry, 3000)
-            end
+            VorpCore.NotifyRightTip(_source, language.cantcarry, 3000)
         elseif canCarry2 then
-            local adding = VorpInv.addItem(_source, reward[chance2].name, count)
-            if adding then
-                local canCarry = exports.vorp_inventory:canCarryItem(_source, reward[chance2].name, count)
-                if canCarry then
-                    TriggerClientEvent("vorp:TipRight", _source, language.youfound .. reward[chance2].label, 3000)
-                else
-                    TriggerClientEvent("vorp:TipRight", _source, language.cantcarry .. reward[chance2].label, 3000)
-                end
+            local canCarry = exports.vorp_inventory:canCarryItem(_source, reward[chance2].name, count)
+            if canCarry then
+                VorpInv.addItem(_source, reward[chance2].name, count)
+
+                VorpCore.NotifyRightTip(_source, language.youfound .. reward[chance2].label, 3000)
+            else
+                VorpCore.NotifyRightTip(_source, language.cantcarry .. reward[chance2].label, 3000)
             end
         end
     end
 end)
-
 
 RegisterServerEvent('syn_miner_lumber:removeitem')
 AddEventHandler('syn_miner_lumber:removeitem', function(item,itemdata)
