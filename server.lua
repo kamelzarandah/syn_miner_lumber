@@ -1,12 +1,13 @@
+local VorpCore = {}
+
 TriggerEvent("getCore",function(core)
     VorpCore = core
 end)
-VorpInv = exports.vorp_inventory:vorp_inventoryApi()
 
 Citizen.CreateThread(function()
 	for k,v in pairs(Config.items) do 
-		VorpInv.RegisterUsableItem(k, function(data)
-            useditem(data.source,k,v,data)
+		exports.vorp_inventory:registerUsableItem(k, function(data)
+                    useditem(data.source,k,v,data)
 		end)
 	end
 end)
@@ -25,6 +26,7 @@ function useditem(source,item,iteminfo,info)
 end
 
 
+
 ---@param source -- player id
 
 ---@param item -- item name
@@ -32,12 +34,13 @@ end
 ---@param amount-- amount of item
 
 ---@param callback-- callback function async or sync leave nil
+
 RegisterServerEvent('syn_miner_lumber:addItem')
 AddEventHandler('syn_miner_lumber:addItem', function(thetype, itemused)
     local _source = source
-    local itemcount = VorpInv.getItemCount(_source, itemused)
+    local itemcount = exports.vorp_inventory:getItemCount(_source,nil,itemused)
     if itemcount <= 0 then
-        VorpCore.NotifyRightTip(_source, language.noaxe .. itemused .. language.noaxe2,3000)
+        VorpCore.NotifyRightTip(_source, language.noaxe .. itemused .. language.noaxe2, 3000)
         return
     end
     local Character = VorpCore.getUser(_source).getUsedCharacter
@@ -56,21 +59,17 @@ AddEventHandler('syn_miner_lumber:addItem', function(thetype, itemused)
         if containsjob(job, Config.jobs[thetype]) then
             count = count + Config.rewardincrease
         end
-        local canCarry2 = exports.vorp_inventory:canCarryItems(_source, count)
+        local canCarry2 = exports.vorp_inventory:canCarryItems(_source,count)
 
         if canCarry2 == false then
-            do
-                TriggerClientEvent("vorp:TipRight", _source, language.cantcarry, 3000)
-            end
+            VorpCore.NotifyRightTip(_source, language.cantcarry, 3000)
         elseif canCarry2 then
-            local adding = VorpInv.addItem(_source, reward[chance2].name, count)
-            if adding then
-                local canCarry = exports.vorp_inventory:canCarryItem(_source, reward[chance2].name, count)
-                if canCarry then
-                    TriggerClientEvent("vorp:TipRight", _source, language.youfound .. reward[chance2].label, 3000)
-                else
-                    TriggerClientEvent("vorp:TipRight", _source, language.cantcarry .. reward[chance2].label, 3000)
-                end
+            local canCarry = exports.vorp_inventory:canCarryItem(_source, reward[chance2].name, count)
+            if canCarry then
+                exports.vorp_inventory:addItem(_source, reward[chance2].name, count,nil)
+                VorpCore.NotifyRightTip(_source, language.youfound .. reward[chance2].label, 3000)
+            else
+                VorpCore.NotifyRightTip(_source, language.cantcarry .. reward[chance2].label, 3000)
             end
         end
     end
@@ -81,8 +80,8 @@ RegisterServerEvent('syn_miner_lumber:removeitem')
 AddEventHandler('syn_miner_lumber:removeitem', function(item,itemdata)
 	local _source = source
     local id = itemdata.item.mainid
-    VorpInv.subItemID(_source, id)
-    TriggerClientEvent("vorp:TipRight", _source, language.axebroken, 2000)
+    exports.vorp_inventory:subItemById(_source, id, nil)
+    VorpCore.NotifyRightTip( _source, language.axebroken, 2000)
 end)
 
 RegisterServerEvent('syn_miner_lumber:updateitem')
@@ -105,6 +104,6 @@ AddEventHandler('syn_miner_lumber:updateitem', function(item,newdura,itemdata)
             meta.description = language.durability..newdura
             meta.durability = newdura
         end
-        VorpInv.setItemMetadata(_source, itemmetadata.mainid, meta)
+        exports.vorp_inventory:setItemMetadata(_source, itemmetadata.mainid,meta,1,nil)
     end
 end)
