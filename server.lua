@@ -80,7 +80,7 @@ RegisterServerEvent('syn_miner_lumber:removeitem')
 AddEventHandler('syn_miner_lumber:removeitem', function(item,itemdata)
 	local _source = source
     local id = itemdata.item.mainid
-    VorpInv.subItemID(_source, id)
+    exports.vorp_inventory:subItemById(_source, id, nil)
     VorpCore.NotifyRightTip( _source, language.axebroken, 2000)
 end)
 
